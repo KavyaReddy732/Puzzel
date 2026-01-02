@@ -1,27 +1,36 @@
 <template>
   <div>
-    <p class="mb-4 text-gray-600">
-      Number of items in basket: {{ productCount }}
-    </p>
+    <template v-if="productCount === 0">
+      Your basket is empty.
+    </template>
 
-    <PvDataTable :value="itemOverview" striped-rows>
-      <PvColumn field="title" header="Name" />
-      <PvColumn field="price" header="Price">
-        <template #body="{ data }">
-          {{ data.price.toFixed(2) }}
-        </template>
-      </PvColumn>
-      <PvColumn field="quantity" header="Quantity" />
-      <PvColumn header="Total">
-        <template #body="{ data }">
-          {{ data.total.toFixed(2) }}
-        </template>
-      </PvColumn>
-    </PvDataTable>
-
-    <p class="mt-4 text-lg font-bold">
-      Total price: {{ total.toFixed(2) }}
-    </p>
+    <template v-else>
+      <p class="mb-4 text-gray-600">
+        Number of items in basket: {{ productCount }}
+      </p>
+      <PvDataTable :value="itemOverview" striped-rows>
+        <PvColumn field="title" header="Name" />
+        <PvColumn field="price" header="Price">
+          <template #body="{ data }">
+            {{ data.price.toFixed(2) }}
+          </template>
+        </PvColumn>
+        <PvColumn field="quantity" header="Quantity" />
+        <PvColumn header="Total">
+          <template #body="{ data }">
+            {{ data.total.toFixed(2) }}
+          </template>
+        </PvColumn>
+        <PvColumn field="id" header="Remove">
+          <template #body="{ data }">
+            <FontAwesomeIcon icon="trash" @click="$emit('remove', data.id)" class="cursor-pointer text-red-600" />
+          </template>
+        </PvColumn>
+      </PvDataTable>
+      <p class="mt-4 text-lg font-bold">
+        Total price: <span :class="`${ total > 50 ? 'text-red-600' : 'text-black' }`">{{ total.toFixed(2) }}</span>
+      </p>
+    </template>
   </div>
 </template>
 
@@ -53,4 +62,6 @@ const itemOverview = computed(() =>
 const total = computed(() =>
   itemOverview.value.reduce((sum, item) => sum + item.total, 0),
 );
+
+
 </script>

@@ -28,7 +28,7 @@
         </div>
       </template>
       <template #content>
-        <BasketSmall :items="basket" :products="products" />
+        <BasketSmall :items="basket" :products="products" @remove="removeFromCart"/>
       </template>
     </PvCard>
   </div>
@@ -55,5 +55,9 @@ function addProduct(id, quantity = 1) {
   } else {
     basket.value.push({ id, quantity });
   }
+}
+
+function removeFromCart(id) {
+  basket.value = basket.value.filter(item => item.id !== id);
 }
 </script>
