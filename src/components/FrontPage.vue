@@ -13,7 +13,16 @@
           </PvColumn>
           <PvColumn header="Add to Basket">
             <template #body="{ data }">
-              <PvButton label="Add" @click="addProduct(data.id)" />
+               <PvButton
+                v-if="getItemQuantity(data.id) === 0"
+                label="Add"
+                @click="addProduct(data.id)"
+              />
+              <div v-else class="flex items-center gap-2">
+                <PvButton @click="decreaseQuantity(data.id)" > <FontAwesomeIcon icon="minus" /></PvButton>
+                <span>{{ getItemQuantity(data.id) }}</span>
+                <PvButton @click="increaseQuantity(data.id)" > <FontAwesomeIcon icon="plus" /></PvButton>
+              </div>
             </template>
           </PvColumn>
         </PvDataTable>
@@ -37,6 +46,7 @@
 <script setup>
 import { ref } from 'vue';
 import BasketSmall from './BasketSmall.vue';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const products = ref([
   { id: 0, title: 'Banana', price: 1.2 },
@@ -54,6 +64,29 @@ function addProduct(id, quantity = 1) {
     existingItem.quantity += quantity;
   } else {
     basket.value.push({ id, quantity });
+  }
+}
+
+function getItemQuantity(id) {
+  const item = basket.value.find((x) => x.id === id);
+  return item ? item.quantity : 0;
+}
+
+
+function increaseQuantity(id, amount = 1) {
+  const item = basket.value.find((x) => x.id === id);
+  if (item) {
+    item.quantity += amount;
+  }
+}
+
+function decreaseQuantity(id, amount = 1) {
+  const item = basket.value.find((x) => x.id === id);
+  if (item) {
+    item.quantity = Math.max(0, item.quantity - amount);
+    if (item.quantity === 0) {
+      removeFromCart(id);
+    }
   }
 }
 

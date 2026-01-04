@@ -21,7 +21,7 @@
             {{ data.total.toFixed(2) }}
           </template>
         </PvColumn>
-        <PvColumn field="id" header="Remove">
+        <PvColumn field="id" header="">
           <template #body="{ data }">
             <FontAwesomeIcon icon="trash" @click="$emit('remove', data.id)" class="cursor-pointer text-red-600" />
           </template>
