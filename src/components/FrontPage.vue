@@ -13,15 +13,19 @@
           </PvColumn>
           <PvColumn header="Add to Basket">
             <template #body="{ data }">
-               <PvButton
+              <PvButton
                 v-if="getItemQuantity(data.id) === 0"
                 label="Add"
                 @click="addProduct(data.id)"
               />
               <div v-else class="flex items-center gap-2">
-                <PvButton @click="decreaseQuantity(data.id)" > <FontAwesomeIcon icon="minus" /></PvButton>
+                <PvButton @click="decreaseQuantity(data.id)">
+                  <FontAwesomeIcon icon="minus" />
+                </PvButton>
                 <span>{{ getItemQuantity(data.id) }}</span>
-                <PvButton @click="increaseQuantity(data.id)" > <FontAwesomeIcon icon="plus" /></PvButton>
+                <PvButton @click="increaseQuantity(data.id)">
+                  <FontAwesomeIcon icon="plus" />
+                </PvButton>
               </div>
             </template>
           </PvColumn>
@@ -37,7 +41,7 @@
         </div>
       </template>
       <template #content>
-        <BasketSmall :items="basket" :products="products" @remove="removeFromCart"/>
+        <BasketSmall :items="basketStore.basketItems" :products="products" @remove="removeFromCart"/>
       </template>
     </PvCard>
   </div>
@@ -47,6 +51,7 @@
 import { ref } from 'vue';
 import BasketSmall from './BasketSmall.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { useBasketStore } from '../stores/BasketStore';
 
 const products = ref([
   { id: 0, title: 'Banana', price: 1.2 },
@@ -55,39 +60,22 @@ const products = ref([
   { id: 3, title: 'Flour', price: 5.0 },
 ]);
 
-const basket = ref([]);
+const basketStore = useBasketStore();
 
 function addProduct(id, quantity = 1) {
-  const existingItem = basket.value.find((x) => x.id === id);
-
-  if (existingItem) {
-    existingItem.quantity += quantity;
-  } else {
-    basket.value.push({ id, quantity });
-  }
+  basketStore.addProduct(id, quantity);
 }
 
 function getItemQuantity(id) {
-  const item = basket.value.find((x) => x.id === id);
-  return item ? item.quantity : 0;
+  return basketStore.getItemQuantity(id);
 }
 
-
 function increaseQuantity(id, amount = 1) {
-  const item = basket.value.find((x) => x.id === id);
-  if (item) {
-    item.quantity += amount;
-  }
+  basketStore.increaseQuantity(id, amount);
 }
 
 function decreaseQuantity(id, amount = 1) {
-  const item = basket.value.find((x) => x.id === id);
-  if (item) {
-    item.quantity = Math.max(0, item.quantity - amount);
-    if (item.quantity === 0) {
-      removeFromCart(id);
-    }
-  }
+  basketStore.decreaseQuantity(id, amount);
 }
 
 function removeFromCart(id) {

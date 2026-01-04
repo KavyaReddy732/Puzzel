@@ -1,4 +1,5 @@
 import { createApp } from 'vue';
+import { createPinia } from 'pinia';
 import PrimeVue from 'primevue/config';
 import Aura from '@primevue/themes/aura';
 
@@ -7,6 +8,7 @@ import Button from 'primevue/button';
 import Card from 'primevue/card';
 import Column from 'primevue/column';
 import DataTable from 'primevue/datatable';
+import ProgressSpinner from 'primevue/progressspinner';
 
 // FontAwesome
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -23,6 +25,8 @@ import App from './App.vue';
 library.add(faCartShopping, faPlus, faMinus, faTrash);
 
 const app = createApp(App);
+
+app.use(createPinia());
 
 // Configure PrimeVue
 app.use(PrimeVue, {
