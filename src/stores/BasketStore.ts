@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { getStoredItems, setStoredItems } from '../utils/basketLocalStorage';
 
-export const useBasketStore = defineStore('cart', {
+export const useBasketStore = defineStore('basket', {
   state: () => ({
     basketItems: getStoredItems(),
   }),
