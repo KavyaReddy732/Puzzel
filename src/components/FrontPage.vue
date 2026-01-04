@@ -1,76 +1,99 @@
 <template>
-  <div class="mx-auto max-w-4xl space-y-6">
-
+  <div class="mx-auto w-full md:max-w-4xl space-y-6 px-4">
     <PvCard>
       <template #title>Products</template>
       <template #content>
         <div v-if="isLoading" class="flex items-center justify-center py-10">
           <PvProgressSpinner />
         </div>
-        <div v-else-if="error" class="rounded-md bg-red-50 p-4 text-sm text-red-700">
+        <div
+          v-else-if="error"
+          class="rounded-md bg-red-50 p-4 text-sm text-red-700"
+        >
           {{ error }}
         </div>
-        <PvDataTable v-else :value="products" striped-rows>
-          <PvColumn header="Image">
+
+        <PvDataTable
+          v-else
+          :value="products"
+          striped-rows
+          breakpoint="786px"
+          class="p-datatable-sm"
+        >
+          <PvColumn
+            header="Image"
+            headerClass="text-xs md:text-base"
+            bodyClass="text-xs md:text-base"
+          >
             <template #body="{ data }">
               <img
                 :src="data.image"
                 :alt="data.title"
-                class="product-thumb h-12 w-12  object-contain"
+                class="h-12 w-12 md:h-16 md:w-16 object-contain"
                 loading="lazy"
               />
             </template>
           </PvColumn>
-          <PvColumn field="title" header="Name" />
-          <PvColumn field="price" header="Price">
+          <PvColumn
+            header="Name"
+            headerClass="text-xs md:text-base"
+            bodyClass="text-xs md:text-base"
+          >
             <template #body="{ data }">
-              {{ data.price.toFixed(2) }}
+              <div class="text-xs md:text-base leading-tight">
+                {{ data.title }}
+              </div>
             </template>
           </PvColumn>
-          <PvColumn header="Add to Basket">
+          <PvColumn
+            field="price"
+            header="Price"
+            headerClass="text-xs md:text-base"
+            bodyClass="text-xs md:text-base"
+          >
+            <template #body="{ data }">
+              <span class="text-xs md:text-base"
+                >${{ data.price.toFixed(2) }}</span
+              >
+            </template>
+          </PvColumn>
+          <PvColumn
+            header="Cart"
+            headerClass="text-xs md:text-base"
+            bodyClass="text-xs md:text-base"
+          >
             <template #body="{ data }">
               <PvButton
                 v-if="getItemQuantity(data.id) === 0"
                 label="Add"
+                size="small"
+                class="text-xs md:text-base"
                 @click="addProduct(data.id)"
               />
-              <div v-else class="flex items-center gap-2">
-                <PvButton @click="decreaseQuantity(data.id)">
-                  <FontAwesomeIcon icon="minus" />
-                </PvButton>
-                <span>{{ getItemQuantity(data.id) }}</span>
-                <PvButton @click="increaseQuantity(data.id)">
-                  <FontAwesomeIcon icon="plus" />
-                </PvButton>
-              </div>
+              <QuantityControl
+                v-else
+                :item-id="data.id"
+                :quantity="getItemQuantity(data.id)"
+                @increase="increaseQuantity"
+                @decrease="decreaseQuantity"
+              />
             </template>
           </PvColumn>
         </PvDataTable>
-      </template>
-    </PvCard>
-
-        <PvCard>
-      <template #title>
-        <div class="flex items-center gap-2">
-          <FontAwesomeIcon icon="cart-shopping" />
-          Basket
-        </div>
-      </template>
-      <template #content>
-        <BasketSmall :items="basketStore.basketItems" :products="products" :is-loading="isLoading" @remove="removeFromCart"/>
       </template>
     </PvCard>
   </div>
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
-import BasketSmall from './BasketSmall.vue';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { useBasketStore } from '../stores/BasketStore';
-import { useProducts } from '../utils/useProducts';
+import { onMounted } from "vue";
+import BasketSmall from "./BasketSmall.vue";
+import QuantityControl from "./QuantityControl.vue";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { useBasketStore } from "../stores/BasketStore";
+import { useProducts } from "../utils/useProducts";
 
-const { products, isLoading , error, fetchProducts } = useProducts();
+const { products, isLoading, error, fetchProducts } = useProducts();
 
 const basketStore = useBasketStore();
 

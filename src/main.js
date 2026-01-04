@@ -20,6 +20,7 @@ import './assets/main.css';
 
 // App
 import App from './App.vue';
+import router from "./router";
 
 // Add icons to library
 library.add(faCartShopping, faPlus, faMinus, faTrash);
@@ -27,7 +28,7 @@ library.add(faCartShopping, faPlus, faMinus, faTrash);
 const app = createApp(App);
 
 app.use(createPinia());
-
+app.use(router)
 // Configure PrimeVue
 app.use(PrimeVue, {
   theme: {
