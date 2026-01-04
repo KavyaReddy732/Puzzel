@@ -43,6 +43,7 @@ app.component('PvButton', Button);
 app.component('PvCard', Card);
 app.component('PvColumn', Column);
 app.component('PvDataTable', DataTable);
+app.component('PvProgressSpinner', ProgressSpinner);
 
 // Register FontAwesome
 app.component('FontAwesomeIcon', FontAwesomeIcon);

@@ -4,7 +4,23 @@
     <PvCard>
       <template #title>Products</template>
       <template #content>
-        <PvDataTable :value="products" striped-rows>
+        <div v-if="isLoading" class="flex items-center justify-center py-10">
+          <PvProgressSpinner />
+        </div>
+        <div v-else-if="error" class="rounded-md bg-red-50 p-4 text-sm text-red-700">
+          {{ error }}
+        </div>
+        <PvDataTable v-else :value="products" striped-rows>
+          <PvColumn header="Image">
+            <template #body="{ data }">
+              <img
+                :src="data.image"
+                :alt="data.title"
+                class="product-thumb h-12 w-12  object-contain"
+                loading="lazy"
+              />
+            </template>
+          </PvColumn>
           <PvColumn field="title" header="Name" />
           <PvColumn field="price" header="Price">
             <template #body="{ data }">
@@ -48,17 +64,13 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { onMounted } from 'vue';
 import BasketSmall from './BasketSmall.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { useBasketStore } from '../stores/BasketStore';
+import { useProducts } from '../utils/useProducts';
 
-const products = ref([
-  { id: 0, title: 'Banana', price: 1.2 },
-  { id: 1, title: 'Orange', price: 2.5 },
-  { id: 2, title: 'Tomato', price: 1.6 },
-  { id: 3, title: 'Flour', price: 5.0 },
-]);
+const { products, isLoading , error, fetchProducts } = useProducts();
 
 const basketStore = useBasketStore();
 
@@ -79,6 +91,10 @@ function decreaseQuantity(id, amount = 1) {
 }
 
 function removeFromCart(id) {
-  basket.value = basket.value.filter(item => item.id !== id);
+  basketStore.removeFromCart(id);
 }
+
+onMounted(() => {
+  fetchProducts();
+});
 </script>
