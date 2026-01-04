@@ -57,7 +57,7 @@
         </div>
       </template>
       <template #content>
-        <BasketSmall :items="basketStore.basketItems" :products="products" @remove="removeFromCart"/>
+        <BasketSmall :items="basketStore.basketItems" :products="products" :is-loading="isLoading" @remove="removeFromCart"/>
       </template>
     </PvCard>
   </div>

@@ -1,6 +1,11 @@
 <template>
   <div>
-    <template v-if="productCount === 0">
+    <template v-if="isLoading">
+      <div class="flex items-center justify-center py-10">
+        <PvProgressSpinner />
+      </div>
+    </template>
+    <template v-else-if="productCount === 0">
       Your basket is empty.
     </template>
 
@@ -40,6 +45,7 @@ import { computed } from 'vue';
 const props = defineProps({
   items: { type: Array, required: true },
   products: { type: Array, required: true },
+  isLoading: { type: Boolean, default: false },
 });
 
 const productCount = computed(() =>
@@ -47,16 +53,19 @@ const productCount = computed(() =>
 );
 
 const itemOverview = computed(() =>
-  props.items.map((item) => {
-    const product = props.products[item.id];
-    return {
-      id: item.id,
-      title: product.title,
-      price: product.price,
-      quantity: item.quantity,
-      total: item.quantity * product.price,
-    };
-  }),
+  props.items
+    .map((item) => {
+      const product = props.products[item.id];
+      if (!product) return null;
+      return {
+        id: item.id,
+        title: product.title,
+        price: product.price,
+        quantity: item.quantity,
+        total: item.quantity * product.price,
+      };
+    })
+    .filter((item) => item !== null),
 );
 
 const total = computed(() =>
