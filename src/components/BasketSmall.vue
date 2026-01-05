@@ -1,12 +1,6 @@
 <template>
   <div class="mx-auto w-full md:max-w-4xl space-y-6 px-4">
     <PvCard>
-      <template #title>
-        <div class="flex items-center gap-2">
-          <FontAwesomeIcon icon="cart-shopping" />
-          Shopping Cart
-        </div>
-      </template>
       <template #content>
         <template v-if="isLoading">
           <div class="flex items-center justify-center py-10">
