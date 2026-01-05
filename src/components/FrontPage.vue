@@ -88,9 +88,7 @@
 
 <script setup>
 import { onMounted } from "vue";
-import BasketSmall from "./BasketSmall.vue";
 import QuantityControl from "./QuantityControl.vue";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { useBasketStore } from "../stores/BasketStore";
 import { useProducts } from "../utils/useProducts";
 
@@ -112,10 +110,6 @@ function increaseQuantity(id, amount = 1) {
 
 function decreaseQuantity(id, amount = 1) {
   basketStore.decreaseQuantity(id, amount);
-}
-
-function removeFromCart(id) {
-  basketStore.removeFromCart(id);
 }
 
 onMounted(() => {
