@@ -57,7 +57,8 @@
                 <FontAwesomeIcon 
                   icon="trash" 
                   @click="removeFromCart(data.id)" 
-                  class="cursor-pointer text-red-600 hover:text-red-800 text-xs md:text-base" 
+                  class="cursor-pointer text-red-600 hover:text-red-800 text-xs md:text-base"
+                  aria-label="Remove item from cart" 
                 />
               </template>
             </PvColumn>

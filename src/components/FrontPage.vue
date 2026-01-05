@@ -69,6 +69,7 @@
                 size="small"
                 class="text-xs md:text-base"
                 @click="addProduct(data.id)"
+                aria-label="Add to cart"
               />
               <QuantityControl
                 v-else
