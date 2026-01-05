@@ -92,7 +92,7 @@ const productCount = computed(() =>
 const itemOverview = computed(() =>
   basketStore.basketItems
     .map((item) => {
-      const product = products.value[item.id];
+      const product = products.value.find((entry) => entry.id === item.id);
       if (!product) return null;
       return {
         id: item.id,
